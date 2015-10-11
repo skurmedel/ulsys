@@ -150,8 +150,8 @@ def kochFlake(n, axiom="F++F++F"):
 
 kochFlake.turtleActions = {
         "F":TurtleAction.forward(),
-        "-":TurtleAction.rotate(-math.pi / 2.5),
-        "+":TurtleAction.rotate( math.pi / 2.5),
+        "-":TurtleAction.rotate(-math.pi / 3),
+        "+":TurtleAction.rotate( math.pi / 3),
         "[":TurtleAction.push(),
         "]":TurtleAction.pop()
     }
