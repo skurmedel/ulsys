@@ -1,5 +1,3 @@
-![Koch Snowflake Image](example.svg)
-
 # ulsys
 "Micro" LSys. A small Python 3+ library for evaluating Lindenmayer-systems, with a small accompanying turtle implementation for pretty drawings.
 
@@ -16,6 +14,9 @@ These are the desired goals with the library. ulsys is not an attempt to write t
 ### Secondary goals
 - Performance
 - Support for stochastic Lindenmayer systems
+
+# Examples
+![Koch Snowflake Vector Image](example.svg)
 
 ## Platform
 Python 3+
