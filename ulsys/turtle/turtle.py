@@ -1,5 +1,6 @@
 """
-ulsys turtle file.
+ulsys turtle file. This package is different from the turtle packaged with 
+CPython.
 
 License follows
 -------------------------------------------------------------------------------
