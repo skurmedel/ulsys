@@ -7,7 +7,7 @@ ULSYS IS VERY MUCH PRE-ALPHA RIGHT NOW AND THE INTERFACE WILL LIKELY CHANGE A LO
 - [X] Reasonable Turtle API
 - [X] PyX Turtle Backend
 - [X] PoC Simple L-System implementation
-- [ ] Package partitioned after L-System type
+- [X] Package partitioned after L-System type
 - [ ] Stochastic L-System support
 - [ ] Interopability with Python stdlib turtle package
 
@@ -33,18 +33,22 @@ SVG file:
 
 ```python
 import ulsys
+from ulsys import standard
 from ulsys import turtle
 
 t = turtle.PyXTurtle()
 
-syms = ulsys.triKochFlake(3)
+syms = standard.evaluateSystem(
+    "-F+F+F",
+    standard.production("F->-F-F+F+F+F"),
+    8)
 actions = ulsys.triKochFlake.turtleActions
 
 turtle.mapActions(syms, actions, t)
 
-from pyx import canvas, path
+from pyx import canvas, path, style
 c = canvas.canvas()
-c.stroke(path.path(*t.paths))
+c.stroke(path.path(*t.paths), [style.linewidth(0.15), style.linestyle(d=style.dash([1,2]))])
 
 with open("test.svg", "wb") as f:
     c.writeSVGfile(f)
