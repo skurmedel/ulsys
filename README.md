@@ -1,6 +1,8 @@
 # ulsys
 "Micro" LSys. A small Python 3+ library for evaluating Lindenmayer-systems, with a small accompanying turtle implementation for pretty drawings.
 
+ULSYS IS VERY MUCH PRE-ALPHA RIGHT NOW AND THE INTERFACE WILL LIKELY CHANGE A LOT.
+
 ## Goals 
 These are the desired goals with the library. ulsys is not an attempt to write the most performant, most feature complete L-System evaluator, at least for now. But it strives to be simple to use and good enough for most scenarios.
 
