@@ -38,17 +38,14 @@ from ulsys import turtle
 
 t = turtle.PyXTurtle()
 
-syms = standard.evaluateSystem(
-    "-F+F+F",
-    standard.production("F->-F-F+F+F+F"),
-    8)
+syms = ulsys.triKochFlake(4)
 actions = ulsys.triKochFlake.turtleActions
 
 turtle.mapActions(syms, actions, t)
 
 from pyx import canvas, path, style
 c = canvas.canvas()
-c.stroke(path.path(*t.paths), [style.linewidth(0.15), style.linestyle(d=style.dash([1,2]))])
+c.stroke(path.path(*t.paths), [style.linewidth(0.15)])
 
 with open("test.svg", "wb") as f:
     c.writeSVGfile(f)
