@@ -9,6 +9,7 @@ ULSYS IS VERY MUCH PRE-ALPHA RIGHT NOW AND THE INTERFACE WILL LIKELY CHANGE A LO
 - [X] PoC Simple L-System implementation
 - [ ] Package partitioned after L-System type
 - [ ] Stochastic L-System support
+- [ ] Interopability with Python stdlib turtle package
 
 ## Goals 
 These are the desired goals with the library. ulsys is not an attempt to write the most performant, most feature complete L-System evaluator, at least for now. But it strives to be simple to use and good enough for most scenarios.
