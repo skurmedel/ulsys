@@ -57,7 +57,7 @@ def mapActions(symbols, actions, turtle):
     
     Non mapped symbols are ignored (they do not generate an error!)
     
-    An action is a function f: turtle -> None.
+    An action is a function object f: turtle -> None.
     """
     for s in symbols:
         # Todo: Maybe warn if not in actions?
@@ -129,31 +129,33 @@ class TurtleAction:
             b(turtle)
         return do_combined_action
 
-# TODO: MOVE INTO PACKAGE!
-from pyx import *
-
-class PyXTurtle(BaseTurtle):
-    def __init__(self):
-        super().__init__()
-        self.paths = []
-        self.states = []
-        self.paths.append(path.moveto(0, 0))
+try:
+    from pyx import *
     
-    def forward(self, scale=1.0):
-        super().forward(scale)
-        self.paths.append(path.lineto(self.pos.x, self.pos.y))
-    
-    def rotate(self, rad):
-        super().rotate(rad)
-    
-    def push(self):
-        self.states.append((self.pos, self.angle))
-    
-    def linewidth(self, width):
-        path.moveto(0,0) #IMPLEMENT
-    
-    def pop(self):
-        pos, angle = self.states.pop()
-        self.pos = pos
-        self.angle = angle
-        self.paths.append(path.moveto(pos.x, pos.y))
+    class PyXTurtle(BaseTurtle):
+        def __init__(self):
+            super().__init__()
+            self.paths = []
+            self.states = []
+            self.paths.append(path.moveto(0, 0))
+        
+        def forward(self, scale=1.0):
+            super().forward(scale)
+            self.paths.append(path.lineto(self.pos.x, self.pos.y))
+        
+        def rotate(self, rad):
+            super().rotate(rad)
+        
+        def push(self):
+            self.states.append((self.pos, self.angle))
+        
+        def linewidth(self, width):
+            path.moveto(0,0) #IMPLEMENT
+        
+        def pop(self):
+            pos, angle = self.states.pop()
+            self.pos = pos
+            self.angle = angle
+            self.paths.append(path.moveto(pos.x, pos.y))
+except ImportError:
+    pass
