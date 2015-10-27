@@ -149,19 +149,26 @@ def evaluateSystem(axiom, rules, n, rng=None):
         else:
             raise TypeError("rules is of an unsupported type {}".format(rtype))
     
+    # Recursive implementation. To speed things up we avoid the above checks.
     def impl(curr_axiom, curr_n):
         if curr_n < 1:
             return curr_axiom
         newaxiom = []
+        # Replace each symbol in the axiom
         for S in curr_axiom:
             if S in s_to_rules:
+                # Sort by probability
                 current_rules = sorted(s_to_rules[S], key=lambda x: x[0])
+                # The total probability for all the rules for the given S
                 prob_total = sum((R for R, Abc in current_rules))
                 
+                # Construct a list of weights, ordered and scaled by total
                 weights = [R/prob_total for R, Abc in current_rules]
                 weight_ranges = list(zip([0] + weights, weights + [1.0]))
                 p = rng()
                 
+                # We check each of the "ranges" to see if p fits inside them.
+                # if it does we break and pick that range's corresponding rule.
                 selected_rule = None
                 for i in range(0, len(weight_ranges)):
                     a, b = weight_ranges[i]
