@@ -1,5 +1,5 @@
 """
-ulsys main file.
+ulsys standard L-System module.
 
 License follows
 -------------------------------------------------------------------------------
