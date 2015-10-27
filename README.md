@@ -3,6 +3,13 @@
 
 ULSYS IS VERY MUCH PRE-ALPHA RIGHT NOW AND THE INTERFACE WILL LIKELY CHANGE A LOT.
 
+## Current status
+- [X] Reasonable Turtle API
+- [X] PyX Turtle Backend
+- [X] PoC Simple L-System implementation
+- [ ] Package partitioned after L-System type
+- [ ] Stochastic L-System support
+
 ## Goals 
 These are the desired goals with the library. ulsys is not an attempt to write the most performant, most feature complete L-System evaluator, at least for now. But it strives to be simple to use and good enough for most scenarios.
 
@@ -24,22 +31,22 @@ Use the included "Tri" Koch Snowflake and the PyX library turtle to create an
 SVG file:
 
 ```python
-    import ulsys
-    from ulsys import turtle
-    
-    t = turtle.PyXTurtle()
-    
-    syms = ulsys.triKochFlake(3)
-    actions = ulsys.triKochFlake.turtleActions
-    
-    turtle.mapActions(syms, actions, t)
-    
-    from pyx import canvas, path
-    c = canvas.canvas()
-    c.stroke(path.path(*t.paths))
-    
-    with open("test.svg", "wb") as f:
-        c.writeSVGfile(f)
+import ulsys
+from ulsys import turtle
+
+t = turtle.PyXTurtle()
+
+syms = ulsys.triKochFlake(3)
+actions = ulsys.triKochFlake.turtleActions
+
+turtle.mapActions(syms, actions, t)
+
+from pyx import canvas, path
+c = canvas.canvas()
+c.stroke(path.path(*t.paths))
+
+with open("test.svg", "wb") as f:
+    c.writeSVGfile(f)
 ```
 
 ## Platform
