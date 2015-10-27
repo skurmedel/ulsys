@@ -27,6 +27,7 @@ SOFTWARE.
 """
 
 import re
+import random
 
 _prodre = re.compile("^([^->])(\s[0-9]+(\.[0-9]*)?)?\s*->([^->]*)$")
 
@@ -85,23 +86,97 @@ def production(*args):
         return res[0]
     return res
 
-def evaluateSystem(axiom, rules, n):
+def evaluateSystem(axiom, rules, n, rng=None):
     """Evaluates a stochastic system. 
+    
+    A stochastic system consists of an axiom, an alphabet and the rules. In this
+    module the alphabet is inferred from the axiom and the rules.
+    
+    Each rule has an associated symbol S, a probability R and a production Abc.
+    
+    Each iteration, every symbol S in the axiom is iterated. We find the rules
+    for the symbol and based on the probability R we pick one. S is replaced
+    with the rule's production Abc, itself a list of symbols.
+    
+    At the end of an iteration the axiom for the next iteration is set to the
+    result of this process.
     
     Since there can be multiple production rules for a symbol in a stochastic 
     L-System we must enforce certain requirements. 
     
-    For an input symbol S, its production rules (if any) has an associated 
-    probability P. The total sum of P for all the rules for S must be less than
-    or equal to 1.0.
+        For an input symbol S, its production rules (if any) has an associated 
+        probability P. The total sum of P for all the rules for S must be 
+        greater than zero. Each individual rules probability is scaled by the
+        total sum, so for example two rules for S, with P 2 and 4 are scaled
+        by 1/6 to 1/3 and 2/3.
+        
+    Being a stochastic system it is generally not deterministic, you can force
+    determinism by providing your own pseudo-random number generator.
     
     axiom is a list of starting symbols.
     rules is any of the following:
-        TBD.
+        a dictionary type S->[(R, Symbols)], like {1: [(0.2, [1, 2, 3])]}
+        a list of tuples as the ones produced by the function production()
+        a single tuple as the ones produced by the function production()
     n is the number of iterations.
+    
+    rng is an optional value that is expected to be either None, or a function
+    that returns a floating point value between 0 and 1.
+    
+    >>> evaluateSystem("AA", production("A 0.5->BA", "A 0.5->C"), 2, rng=lambda: 0.5)
+    ['B', 'B', 'A', 'B', 'B', 'A']
     """ 
-    pass
+    if rng is None:
+        rng = lambda: random.random()
+    if not callable(rng):
+        raise TypeError("rng is supposed to be callable")
+    
+    s_to_rules = dict()
+    rtype = type(rules)
+    
+    if issubclass(rtype, dict):
+        s_to_rules = rules
+    else:
+        if issubclass(rtype, tuple):
+            rules = [rules]
         
+        if issubclass(rtype, list):
+            for S, R, Abc, *t in rules:
+                if S in s_to_rules:
+                    s_to_rules[S].append((R, Abc))
+                else:
+                    s_to_rules[S] = [(R, Abc)]
+        else:
+            raise TypeError("rules is of an unsupported type {}".format(rtype))
+    
+    def impl(curr_axiom, curr_n):
+        if curr_n < 1:
+            return curr_axiom
+        newaxiom = []
+        for S in curr_axiom:
+            if S in s_to_rules:
+                current_rules = sorted(s_to_rules[S], key=lambda x: x[0])
+                prob_total = sum((R for R, Abc in current_rules))
+                
+                weights = [R/prob_total for R, Abc in current_rules]
+                weight_ranges = list(zip([0] + weights, weights + [1.0]))
+                p = rng()
+                
+                selected_rule = None
+                for i in range(0, len(weight_ranges)):
+                    a, b = weight_ranges[i]
+                    if p >= a and p <= b:
+                        selected_rule = current_rules[i]
+                        break
+                assert selected_rule != None
+                
+                _, Abc = selected_rule
+                newaxiom.extend(Abc)
+            else:
+                newaxiom.append(S)
+                continue
+        return impl(newaxiom, curr_n - 1)
+    return impl(axiom, n)
 
 if __name__ == "__main__":
     import doctest
