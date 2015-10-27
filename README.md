@@ -20,6 +20,26 @@ These are the desired goals with the library. ulsys is not an attempt to write t
 # Examples
 ![Koch Snowflake Vector Image](example.svg)
 
+Use the included "Tri" Koch Snowflake and the PyX library turtle to create an
+SVG file:
+
+    import ulsys
+    from ulsys import turtle
+    
+    t = turtle.PyXTurtle()
+    
+    syms = ulsys.triKochFlake(3)
+    actions = ulsys.triKochFlake.turtleActions
+    
+    turtle.mapActions(syms, actions, t)
+    
+    from pyx import canvas, path
+    c = canvas.canvas()
+    c.stroke(path.path(*t.paths))
+    
+    with open("test.svg", "wb") as f:
+        c.writeSVGfile(f)
+
 ## Platform
 Python 3+
 
