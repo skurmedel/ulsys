@@ -157,6 +157,7 @@ def evaluateSystem(axiom, rules, n, rng=None):
         # Replace each symbol in the axiom
         for S in curr_axiom:
             if S in s_to_rules:
+                # Todo: These steps could be moved out of the loop!
                 # Sort by probability
                 current_rules = sorted(s_to_rules[S], key=lambda x: x[0])
                 # The total probability for all the rules for the given S
