@@ -23,6 +23,7 @@ These are the desired goals with the library. ulsys is not an attempt to write t
 Use the included "Tri" Koch Snowflake and the PyX library turtle to create an
 SVG file:
 
+```python
     import ulsys
     from ulsys import turtle
     
@@ -39,6 +40,7 @@ SVG file:
     
     with open("test.svg", "wb") as f:
         c.writeSVGfile(f)
+```
 
 ## Platform
 Python 3+
