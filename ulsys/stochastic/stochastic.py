@@ -114,7 +114,10 @@ def evaluateSystem(axiom, rules, n, rng=None):
         by 1/6 to 1/3 and 2/3.
         
     Being a stochastic system it is generally not deterministic, you can force
-    determinism by providing your own pseudo-random number generator.
+    determinism by providing your own pseudo-random number generator. This is 
+    generally needed when simulating an evolving plant or other phenomena by 
+    increasing n; if the seed is not the same each time the system is evaluated 
+    it will yield different shapes for each "generation".
     
     axiom is a list of starting symbols.
     rules is any of the following:

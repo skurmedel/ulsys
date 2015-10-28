@@ -76,6 +76,58 @@ with open("test.svg", "wb") as f:
     c.writeSVGfile(f)
 ```
 
+Here's a more advanced example with a custom TurtleAction that calls `circle` 
+which adds a circle of a given radius to the PyXTurtle.circle list whenever
+an "A" is encountered. It creates branches like above, but with the seed fixed
+over several generations to simulate growth. The circles ends up at certain
+leaf nodes.
+
+![Example 2 was produced in this fashion.](example2.svg)
+
+```python
+import ulsys
+from ulsys import stochastic
+from ulsys import turtle
+from ulsys.turtle import TurtleAction
+import math
+
+import random
+
+seed = random.random()
+
+for n in range(1, 6):
+
+    random.seed(seed)
+        
+    t = turtle.PyXTurtle()
+    
+    CircleAction = TurtleAction("circle", [0.15])
+    
+    syms = stochastic.evaluateSystem(
+        "X",
+        stochastic.production("X 0.25->F-[[X]+X]+F[+FX]-X", "F->FF", "A->F", "X 0.25->F+[[XX]+X]-F[-FX]-X", "X 0.5->F[X[FXA]]+F[[FX]X]"),
+        n)
+    turtleActions = {
+        "F":TurtleAction.forward(),
+        "-":TurtleAction.rotate(-math.pi / 9),
+        "+":TurtleAction.rotate( math.pi / 9),
+        "[":TurtleAction.push(),
+        "]":TurtleAction.pop(),
+        "A":CircleAction
+    }
+    
+    turtle.mapActions(syms, turtleActions, t)
+    
+    from pyx import canvas, path, style, deco, color
+    c = canvas.canvas()
+    c.stroke(path.path(*t.paths), [style.linewidth(0.15)])
+    for circle in t.circles:    
+        c.fill(circle, attrs=[deco.filled([color.rgb.red])])
+    
+    with open("test{}.svg".format(n), "wb") as f:
+        c.writeSVGfile(f)
+```
+
 ## Platform
 Python 3+
 

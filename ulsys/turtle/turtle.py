@@ -138,6 +138,7 @@ try:
             self.paths = []
             self.states = []
             self.paths.append(path.moveto(0, 0))
+            self.circles = []
         
         def forward(self, scale=1.0):
             super().forward(scale)
@@ -157,5 +158,9 @@ try:
             self.pos = pos
             self.angle = angle
             self.paths.append(path.moveto(pos.x, pos.y))
+        
+        def circle(self, r):
+            self.circles.append(path.circle(self.pos.x, self.pos.y, r))
+            
 except ImportError:
     pass
