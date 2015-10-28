@@ -28,8 +28,11 @@ SOFTWARE.
 
 import re
 import random
+import itertools
 
-_prodre = re.compile("^([^->])(\s[0-9]+(\.[0-9]*)?)?\s*->([^->]*)$")
+__all__ = ["production", "evaluateSystem"]
+
+_prodre = re.compile("^([^->])(\s+[0-9]+(\.[0-9]*)?)?\s*->([^\s]+)$")
 
 def production(*args):
     """Creates a production rule or list of production rules from input.
@@ -139,6 +142,7 @@ def evaluateSystem(axiom, rules, n, rng=None):
     else:
         if issubclass(rtype, tuple):
             rules = [rules]
+            rtype = type(rules)
         
         if issubclass(rtype, list):
             for S, R, Abc, *t in rules:
@@ -165,19 +169,17 @@ def evaluateSystem(axiom, rules, n, rng=None):
                 
                 # Construct a list of weights, ordered and scaled by total
                 weights = [R/prob_total for R, Abc in current_rules]
-                weight_ranges = list(zip([0] + weights, weights + [1.0]))
+                weights_acc = list(itertools.accumulate(weights))
                 p = rng()
                 
-                # We check each of the "ranges" to see if p fits inside them.
-                # if it does we break and pick that range's corresponding rule.
                 selected_rule = None
-                for i in range(0, len(weight_ranges)):
-                    a, b = weight_ranges[i]
-                    if p >= a and p <= b:
+                last_w = 0
+                for i,w in zip(range(0, len(weights_acc)), weights_acc):
+                    if p >= last_w and p <= w:
                         selected_rule = current_rules[i]
                         break
-                assert selected_rule != None
-                
+                    else:
+                        last_w = w
                 _, Abc = selected_rule
                 newaxiom.extend(Abc)
             else:

@@ -8,7 +8,7 @@ ULSYS IS VERY MUCH PRE-ALPHA RIGHT NOW AND THE INTERFACE WILL LIKELY CHANGE A LO
 - [X] PyX Turtle Backend
 - [X] PoC Simple L-System implementation
 - [X] Package partitioned after L-System type
-- [ ] Stochastic L-System support
+- [X] Stochastic L-System support
 - [ ] Interopability with Python stdlib turtle package
 
 ## Goals 
@@ -40,6 +40,31 @@ t = turtle.PyXTurtle()
 
 syms = ulsys.triKochFlake(4)
 actions = ulsys.triKochFlake.turtleActions
+
+turtle.mapActions(syms, actions, t)
+
+from pyx import canvas, path, style
+c = canvas.canvas()
+c.stroke(path.path(*t.paths), [style.linewidth(0.15)])
+
+with open("test.svg", "wb") as f:
+    c.writeSVGfile(f)
+```
+
+A stochastic L-System example, that generates a decently realistic plant branch.
+
+```python
+import ulsys
+from ulsys import stochastic
+from ulsys import turtle
+
+t = turtle.PyXTurtle()
+
+syms = stochastic.evaluateSystem(
+    "X",
+    stochastic.production("X 0.25->F-[[X]+X]+F[+FX]-X", "F->FF", "X 0.25->F+[[XX]+X]-F[-FX]-X", "X 0.5->F[X[FX]]+F[[FX]X]"),
+    6)
+actions = ulsys.fractalPlant.turtleActions
 
 turtle.mapActions(syms, actions, t)
 
