@@ -133,7 +133,7 @@ def evaluateSystem(axiom, rules, n, rng=None):
     ['B', 'B', 'A', 'B', 'B', 'A']
     """ 
     if rng is None:
-        rng = lambda: random.random()
+        rng = lambda: random.uniform(0, 1)
     if not callable(rng):
         raise TypeError("rng is supposed to be callable")
     
