@@ -30,24 +30,13 @@ SOFTWARE.
 __all__ = [
     "mapActions",
     "BaseTurtle",
-    "TurtleAction",
-    "PyXTurtle"
+    "TurtleAction"
 ]
 
 import math
+from .geom import vec2
 from abc import ABC, abstractmethod
 
-class _vec2:
-    def __init__(self, x, y):
-        self.x = x
-        self.y = y
-    
-    def __add__(self, b):
-        return _vec2(self.x + b.x, self.y + b.y)
-    
-    def __mul__(self, a):
-        return _vec2(self.x * float(a), self.y * float(a))
-        
 def mapActions(symbols, actions, turtle):
     """Takes a sequence of symbols and maps them to actions.
     
@@ -73,13 +62,13 @@ class BaseTurtle(ABC):
     Note that a turtle doesn't actually have to inherit from this class to work,
     but it has to provide roughly the same interface.
     """
-    def __init__(self, pos=_vec2(0, 0), angle=math.pi/2):
+    def __init__(self, pos=vec2(0, 0), angle=math.pi/2):
         self.pos = pos
         self.angle = angle
     
     def direction(self):
         """Returns the direction as a unit vector."""
-        return _vec2(math.cos(self.angle), math.sin(self.angle))
+        return vec2(math.cos(self.angle), math.sin(self.angle))
         
     @abstractmethod
     def forward(self, scale=1.0):
@@ -128,39 +117,3 @@ class TurtleAction:
             a(turtle)
             b(turtle)
         return do_combined_action
-
-try:
-    from pyx import *
-    
-    class PyXTurtle(BaseTurtle):
-        def __init__(self):
-            super().__init__()
-            self.paths = []
-            self.states = []
-            self.paths.append(path.moveto(0, 0))
-            self.circles = []
-        
-        def forward(self, scale=1.0):
-            super().forward(scale)
-            self.paths.append(path.lineto(self.pos.x, self.pos.y))
-        
-        def rotate(self, rad):
-            super().rotate(rad)
-        
-        def push(self):
-            self.states.append((self.pos, self.angle))
-        
-        def linewidth(self, width):
-            path.moveto(0,0) #IMPLEMENT
-        
-        def pop(self):
-            pos, angle = self.states.pop()
-            self.pos = pos
-            self.angle = angle
-            self.paths.append(path.moveto(pos.x, pos.y))
-        
-        def circle(self, r):
-            self.circles.append(path.circle(self.pos.x, self.pos.y, r))
-            
-except ImportError:
-    pass
