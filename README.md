@@ -6,6 +6,7 @@ ULSYS IS VERY MUCH PRE-ALPHA RIGHT NOW AND THE INTERFACE WILL LIKELY CHANGE A LO
 ## Current status
 - [X] Reasonable Turtle API
 - [X] PyX Turtle Backend
+- [X] Very simple Tikz (LaTeX) Turtle Backend
 - [X] PoC Simple L-System implementation
 - [X] Package partitioned after L-System type
 - [X] Stochastic L-System support
